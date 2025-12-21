@@ -1,4 +1,3 @@
-import React from "react";
 import "./LazyLoading.style.css";
 import { ScaleLoader } from "react-spinners";
 
