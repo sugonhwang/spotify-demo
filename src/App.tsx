@@ -1,35 +1,45 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { Suspense } from "react";
+import { Route, Routes } from "react-router";
+import "./App.css";
+import SearchWithKeywordPage from "./pages/SearchKeywordPage/SearchWithKeywordPage";
+import PlayListDetailPage from "./pages/PlayListDetailPage/PlayListDetailPage";
+import PlaylistPage from "./pages/PlaylistPage/PlaylistPage";
+import LazyLoading from "./common/components/LazyLoading";
+const AppLayout = React.lazy(() => import("./layout/AppLayout"));
+const HomePage = React.lazy(() => import("./pages/HomePage/HomePage"));
+const SearchPage = React.lazy(() => import("./pages/SearchPage/SearchPage"));
+
+/** 로직
+ * 사이드 바 있어야 함 (플레이리스트, 메뉴)
+ * 홈페이지: /
+ * 서치 페이지: /search
+ * 서치 결과 페이지: /search/:keyword
+ * 플레이리스트 디테일 페이지: /playlist/:id
+ * (모바일버전) 플레이 리스트 보여주는 페이지: /playlist
+ */
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div>
+      <Suspense
+        fallback={
+          <div>
+            <LazyLoading />
+          </div>
+        }
+      >
+        <Routes>
+          <Route path="/" element={<AppLayout />}>
+            <Route index element={<HomePage />} />
+            <Route path="search" element={<SearchPage />} />
+            <Route path="search/:keyword" element={<SearchWithKeywordPage />} />
+            <Route path="playlist/:id" element={<PlayListDetailPage />} />
+            <Route path="playlist" element={<PlaylistPage />} />
+          </Route>
+        </Routes>
+      </Suspense>
+    </div>
+  );
 }
 
-export default App
+export default App;
