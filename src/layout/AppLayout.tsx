@@ -2,6 +2,8 @@ import { Box, styled, Typography } from "@mui/material";
 import { NavLink, Outlet } from "react-router";
 import HomeIcon from "@mui/icons-material/Home";
 import SearchIcon from "@mui/icons-material/Search";
+import LibraryHead from "./components/LibraryHead";
+import Library from "./components/Library";
 
 const Layout = styled("div")({
   display: "flex",
@@ -64,6 +66,10 @@ const AppLayout = () => {
               </Typography>
             </StyledNavLink>
           </NavList>
+        </ContentBox>
+        <ContentBox height="100%">
+          <LibraryHead />
+          <Library />
         </ContentBox>
       </Sidebar>
       <Outlet />
