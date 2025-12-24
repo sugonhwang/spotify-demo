@@ -4,6 +4,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import SearchIcon from "@mui/icons-material/Search";
 import LibraryHead from "./components/LibraryHead";
 import Library from "./components/Library";
+import NavBar from "./components/NavBar";
 
 const Layout = styled("div")({
   display: "flex",
@@ -72,7 +73,10 @@ const AppLayout = () => {
           <Library />
         </ContentBox>
       </Sidebar>
-      <Outlet />
+      <ContentBox>
+        <Outlet />
+        <NavBar />
+      </ContentBox>
     </Layout>
   );
 };
