@@ -1,18 +1,17 @@
 {
   "compilerOptions": {
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-    "target": "ES2022",
+    "target": "ES2020",
     "useDefineForClassFields": true,
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
-    "types": ["vite/client"],
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext", // node16에서 ESNext로 변경
     "skipLibCheck": true,
+    "moduleDetection": "force",
 
     /* Bundler mode */
-    "moduleResolution": "bundler",
+    "moduleResolution": "bundler", // node16에서 bundler로 변경
     "allowImportingTsExtensions": true,
-    "verbatimModuleSyntax": true,
-    "moduleDetection": "force",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
 
@@ -20,9 +19,7 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "erasableSyntaxOnly": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noFallthroughCasesInSwitch": true
   },
   "include": ["src"]
 }
