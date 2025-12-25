@@ -74,8 +74,8 @@ const AppLayout = () => {
         </ContentBox>
       </Sidebar>
       <ContentBox>
-        <Outlet />
         <NavBar />
+        <Outlet />
       </ContentBox>
     </Layout>
   );
