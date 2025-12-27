@@ -1,10 +1,11 @@
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 import { Route, Routes } from "react-router";
 import "./App.css";
 import SearchWithKeywordPage from "./pages/SearchKeywordPage/SearchWithKeywordPage";
 import PlayListDetailPage from "./pages/PlayListDetailPage/PlayListDetailPage";
 import PlaylistPage from "./pages/PlaylistPage/PlaylistPage";
 import LazyLoading from "./common/components/LazyLoading";
+import useExchangeToken from "./hooks/useExchangeToken";
 const AppLayout = React.lazy(() => import("./layout/AppLayout"));
 const HomePage = React.lazy(() => import("./pages/HomePage/HomePage"));
 const SearchPage = React.lazy(() => import("./pages/SearchPage/SearchPage"));
@@ -19,6 +20,19 @@ const SearchPage = React.lazy(() => import("./pages/SearchPage/SearchPage"));
  */
 
 function App() {
+  const urlParams = new URLSearchParams(window.location.search);
+
+  const code = urlParams.get("code");
+  const codeVerifier = localStorage.getItem("code_verifier");
+
+  const { mutate: exchangeToken } = useExchangeToken();
+
+  useEffect(() => {
+    if (code && codeVerifier) {
+      exchangeToken({ code, codeVerifier });
+    }
+  }, [code, codeVerifier, exchangeToken]);
+
   return (
     <div>
       <Suspense
