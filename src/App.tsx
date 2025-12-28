@@ -20,13 +20,12 @@ const SearchPage = React.lazy(() => import("./pages/SearchPage/SearchPage"));
  */
 
 function App() {
+  // 유저 로그인 연결
   const urlParams = new URLSearchParams(window.location.search);
-
   const code = urlParams.get("code");
   const codeVerifier = localStorage.getItem("code_verifier");
-
+  // 토큰 교환 훅
   const { mutate: exchangeToken } = useExchangeToken();
-
   useEffect(() => {
     if (code && codeVerifier) {
       exchangeToken({ code, codeVerifier });
@@ -49,6 +48,7 @@ function App() {
             <Route path="search/:keyword" element={<SearchWithKeywordPage />} />
             <Route path="playlist/:id" element={<PlayListDetailPage />} />
             <Route path="playlist" element={<PlaylistPage />} />
+            <Route path="callback" element={<HomePage />} />
           </Route>
         </Routes>
       </Suspense>
