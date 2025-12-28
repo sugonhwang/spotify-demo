@@ -1,5 +1,12 @@
 import { createTheme } from "@mui/material";
 
+// Theme 타입 모듈 확장
+declare module "@mui/material/styles" {
+  interface TypeBackground {
+    paper: string;
+  }
+}
+
 const theme = createTheme({
   palette: {
     mode: "dark",

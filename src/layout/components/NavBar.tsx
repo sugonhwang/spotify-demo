@@ -1,9 +1,6 @@
-import { Avatar, Badge, Box } from "@mui/material";
+import { Avatar, Badge, Box, styled } from "@mui/material";
 import LoginButton from "../../common/components/LoginButton";
 import useGetCurrentProfile from "../../hooks/useGetCurrentUserProfile";
-import styled from "@emotion/styled";
-
-// import styled from "@emotion/styled";
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
