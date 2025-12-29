@@ -37,8 +37,8 @@ const NavBar = () => {
   return (
     <Box display="flex" justifyContent="flex-end" alignItems="center" height="64px">
       {userProfile ? (
-        <StyledBadge overlap="circular" anchorOrigin={{ vertical: "bottom", horizontal: "right" }} variant="dot">
-          <Avatar />
+        <StyledBadge overlap="circular" anchorOrigin={{ vertical: "bottom", horizontal: "left" }} variant="dot">
+          <Avatar src={userProfile.images[0]?.url} />
         </StyledBadge>
       ) : (
         <LoginButton />
