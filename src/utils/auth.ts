@@ -1,4 +1,4 @@
-import { CLIENT_ID, REDIRECT_URI } from "../configs/authConfig";
+import { CLIENT_ID, REDIRECT_URI, SCOPES } from "../configs/authConfig";
 
 import { AuthUrlParams } from "../models/auth";
 import { generateRandomString, sha256, base64encode } from "./crypto";
@@ -12,7 +12,7 @@ export const getSpotifyAuthUrl = async () => {
   const clientId = CLIENT_ID;
   const redirectUri = REDIRECT_URI;
 
-  const scope = "user-read-private user-read-email"; // API 호출할때 마다 필요한 권한 요청시 필요함
+  const scope = SCOPES;
   const authUrl = new URL("https://accounts.spotify.com/authorize");
 
   // generated in the previous step
@@ -30,5 +30,5 @@ export const getSpotifyAuthUrl = async () => {
     authUrl.search = new URLSearchParams(Object.entries(params)).toString();
     window.location.href = authUrl.toString(); // spotify 로그인 주소 오픈
   }
-  console.log("CLIENT_ID =", clientId);
+  // console.log("CLIENT_ID =", clientId);
 };
