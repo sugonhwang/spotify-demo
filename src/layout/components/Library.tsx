@@ -7,7 +7,7 @@ import LazyLoading from "../../common/components/LazyLoading";
 import useGetCurrentProfile from "../../hooks/useGetCurrentUserProfile";
 import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
-import PlaylistUi from "./PlaylistUI";
+import PlaylistUi from "./PlaylistUi";
 
 const PlaylistContainer = styled("div")(({ theme }) => ({
   overflowY: "auto",
