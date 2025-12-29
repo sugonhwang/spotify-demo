@@ -1,13 +1,13 @@
 import { styled } from "@mui/material";
-
 import useGetCurrentUserPlaylists from "../../hooks/useGetCurrentUserPlaylists";
 import ErrorMessage from "../../common/components/ErrorMessage";
 import EmptyPlaylist from "./EmptyPlaylist";
 import LazyLoading from "../../common/components/LazyLoading";
-import PlaylistUi from "./PlaylistUI";
+
 import useGetCurrentProfile from "../../hooks/useGetCurrentUserProfile";
 import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
+import PlaylistUi from "./PlaylistUI";
 
 const PlaylistContainer = styled("div")(({ theme }) => ({
   overflowY: "auto",

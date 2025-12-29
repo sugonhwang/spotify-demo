@@ -1,8 +1,7 @@
-import React, { useState } from "react";
-
 import PlaylistItem from "../../common/components/PlaylistItem";
 import { useNavigate } from "react-router";
 import { SimplifiedPlaylist } from "../../models/playlist";
+import { useState } from "react";
 
 interface PlaylistProps {
   playlists: SimplifiedPlaylist[];
