@@ -2,10 +2,11 @@ import React, { Suspense, useEffect } from "react";
 import { Route, Routes } from "react-router";
 import "./App.css";
 import SearchWithKeywordPage from "./pages/SearchKeywordPage/SearchWithKeywordPage";
-import PlayListDetailPage from "./pages/PlayListDetailPage/PlayListDetailPage";
+
 import PlaylistPage from "./pages/PlaylistPage/PlaylistPage";
 import LazyLoading from "./common/components/LazyLoading";
 import useExchangeToken from "./hooks/useExchangeToken";
+import PlaylistDetailPage from "./pages/PlayListDetailPage/PlayListDetailPage";
 const AppLayout = React.lazy(() => import("./layout/AppLayout"));
 const HomePage = React.lazy(() => import("./pages/HomePage/HomePage"));
 const SearchPage = React.lazy(() => import("./pages/SearchPage/SearchPage"));
@@ -46,7 +47,7 @@ function App() {
             <Route index element={<HomePage />} />
             <Route path="search" element={<SearchPage />} />
             <Route path="search/:keyword" element={<SearchWithKeywordPage />} />
-            <Route path="playlist/:id" element={<PlayListDetailPage />} />
+            <Route path="playlist/:id" element={<PlaylistDetailPage />} />
             <Route path="playlist" element={<PlaylistPage />} />
             <Route path="callback" element={<HomePage />} />
           </Route>
