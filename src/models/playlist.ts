@@ -17,11 +17,12 @@ export interface BasePlaylist {
   uri?: string;
 }
 
+// 현재 사용자 플레이 리스트 요청
 export interface GetCurrentUserPlaylistRequest {
   limit?: number;
   offset?: number;
 }
-
+// 현재 사용자 플레이 리스트 응답
 export type GetCurrentUserPlaylistResponse = ApiResponse<SimplifiedPlaylist>;
 
 export interface Copyright {
@@ -55,6 +56,7 @@ export interface SimplifiedAlbumObject {
   artists: SimplifiedArtistObject[];
 }
 
+// show 타입
 export interface SimplifiedShowObject {
   available_markets: string[];
   copyrights: Copyright[];
@@ -75,6 +77,7 @@ export interface SimplifiedShowObject {
   total_episodes: number;
 }
 
+// 플레이 리스트 트랙의 트랙
 export interface TrackObject {
   album: SimplifiedAlbumObject;
   artists: SimplifiedArtistObject[];
@@ -98,6 +101,7 @@ export interface TrackObject {
   is_local: boolean;
 }
 
+// 플레이 리스트 트랙의 에피소드
 export interface EpisodeObject {
   audio_preview_url: string | null;
   description: string;
@@ -121,6 +125,8 @@ export interface EpisodeObject {
   restrictions?: Restriction;
   show: SimplifiedShowObject;
 }
+
+// 선택한 플레이 리스트 트랙
 export interface PlaylistTrack {
   added_at?: string | null;
   added_by?: {
@@ -134,6 +140,7 @@ export interface PlaylistTrack {
   track: TrackObject | EpisodeObject;
 }
 
+// 현재 사용자 플레이리스트 기본타입(공통타입(BasePlaylist) 확장)
 export interface SimplifiedPlaylist extends BasePlaylist {
   tracks?: {
     href?: string;
@@ -141,6 +148,7 @@ export interface SimplifiedPlaylist extends BasePlaylist {
   };
 }
 
+// 선택한 플레이 리스트 요청
 export interface GetPlaylistRequest {
   playlist_id: string;
   market?: string;
@@ -148,6 +156,7 @@ export interface GetPlaylistRequest {
   additional_types?: string;
 }
 
+// 선택한 플레이리스트 응답(공통타입(BasePlaylist 확장))
 export interface Playlist extends BasePlaylist {
   tracks: ApiResponse<PlaylistTrack>;
   followers: Followers;
