@@ -1,5 +1,5 @@
 import { Navigate, useParams } from "react-router";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { Avatar, Box, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
 
 import useGetPlaylist from "../../hooks/useGetPlaylist";
@@ -33,38 +33,32 @@ const PlaylistDetailPage = () => {
   // 테이블 영역 스크롤 컨테이너
   const tableScrollRef = useRef<HTMLDivElement>(null);
 
-  // 무한 스크롤 트리거용 sentinel
-  const loadMoreRef = useRef<HTMLDivElement | null>(null);
-
   // 헤더 접힘 여부
   const [collapsed, setCollapsed] = useState(false);
 
-  /**
-   * 무한 스크롤 구현
-   * - 테이블 맨 아래 sentinel이 보이면 다음 페이지 요청
-   * - scroll 위치 계산 없이 브라우저가 판단
-   */
-  useEffect(() => {
-    if (!hasNextPage || isFetchingNextPage) return;
+  // 무한 스크롤 트리거용 callback ref
+  const loadMoreRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (isFetchingNextPage || !hasNextPage) return;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          fetchNextPage();
+      // 이전 감시자가 있다면 중단
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting && hasNextPage) {
+            fetchNextPage();
+          }
+        },
+        {
+          root: tableScrollRef.current,
+          rootMargin: "200px",
+          threshold: 0.1,
         }
-      },
-      {
-        root: tableScrollRef.current, // 실제 스크롤 컨테이너
-        threshold: 0.1,
-      }
-    );
+      );
 
-    if (loadMoreRef.current) {
-      observer.observe(loadMoreRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+      if (node) observer.observe(node);
+    },
+    [isFetchingNextPage, hasNextPage, fetchNextPage]
+  );
 
   // 헤더 접힘 처리 (같은 스크롤 기준 사용)
   const handleScroll = () => {
@@ -180,6 +174,7 @@ const PlaylistDetailPage = () => {
               borderBottom: "none",
             },
           }}
+          stickyHeader
         >
           <TableHead>
             <TableRow>
@@ -197,7 +192,7 @@ const PlaylistDetailPage = () => {
             {/* 무한 스크롤 트리거용 요소 */}
             <TableRow>
               <TableCell colSpan={5}>
-                <div ref={loadMoreRef} style={{ height: 1 }} />
+                <div ref={loadMoreRef} style={{ height: 50 }} />
               </TableCell>
             </TableRow>
           </TableBody>
