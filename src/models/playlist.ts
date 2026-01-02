@@ -96,7 +96,7 @@ export interface TrackObject {
   popularity: number;
   preview_url: string | null;
   track_number: number;
-  type: "track";
+  type?: "track";
   uri: string;
   is_local: boolean;
 }
@@ -135,7 +135,7 @@ export interface PlaylistTrack {
     id?: string;
     type?: string;
     uri?: string;
-  };
+  } | null;
   is_local?: boolean;
   track: TrackObject | EpisodeObject;
 }
@@ -156,8 +156,14 @@ export interface GetPlaylistRequest {
   additional_types?: string;
 }
 
+export interface GetPlaylistItemsRequest extends GetPlaylistRequest {
+  offset?: number;
+  limit?: number;
+}
 // 선택한 플레이리스트 응답(공통타입(BasePlaylist 확장))
 export interface Playlist extends BasePlaylist {
   tracks: ApiResponse<PlaylistTrack>;
   followers: Followers;
 }
+
+export type GetPlaylistItemsResponse = ApiResponse<PlaylistTrack>;

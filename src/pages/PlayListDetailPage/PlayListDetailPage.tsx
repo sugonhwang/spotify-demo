@@ -1,67 +1,103 @@
 import { Navigate, useParams } from "react-router";
-import useGetPlaylist from "../../hooks/useGetPlaylist";
-import { useRef, useState } from "react";
-import { Avatar, Box, Stack, Typography } from "@mui/material";
-import LazyLoading from "../../common/components/LazyLoading";
+import { useEffect, useRef, useState } from "react";
+import { Avatar, Box, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
 
-const HEADER_COLLAPSE_POINT = 120; // 이 높이를 넘으면 헤더가 축소됨
+import useGetPlaylist from "../../hooks/useGetPlaylist";
+import useGetPlaylistItems from "../../hooks/useGetPlaylistItems";
+import DesktopPlaylistItem from "./components/DesktopPlaylistItem";
+import LazyLoading from "../../common/components/LazyLoading";
+import { PAGE_LIMIT } from "../../configs/commonConfig";
+
+const HEADER_COLLAPSE_POINT = 120;
 
 const PlaylistDetailPage = () => {
+  // URL 파라미터
   const { id } = useParams<{ id: string }>();
 
+  // 플레이리스트 기본 정보
   const { data: playlist, isLoading } = useGetPlaylist({
-    playlist_id: id ?? "",
+    playlist_id: id as string,
   });
 
-  // 스크롤 영역을 직접 제어하기 위한 ref
-  const scrollRef = useRef<HTMLDivElement>(null);
+  // 플레이리스트 트랙 목록 (무한 스크롤)
+  const {
+    data: playlistItems,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useGetPlaylistItems({
+    playlist_id: id as string,
+    limit: PAGE_LIMIT,
+  });
 
-  // 헤더가 축소 상태인지 확인
+  // 테이블 영역 스크롤 컨테이너
+  const tableScrollRef = useRef<HTMLDivElement>(null);
+
+  // 무한 스크롤 트리거용 sentinel
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
+
+  // 헤더 접힘 여부
   const [collapsed, setCollapsed] = useState(false);
 
-  // 스크롤될 때마다 호출
-  const handleScroll = () => {
-    const scrollTop = scrollRef.current?.scrollTop ?? 0;
+  /**
+   * 무한 스크롤 구현
+   * - 테이블 맨 아래 sentinel이 보이면 다음 페이지 요청
+   * - scroll 위치 계산 없이 브라우저가 판단
+   */
+  useEffect(() => {
+    if (!hasNextPage || isFetchingNextPage) return;
 
-    // 기준 지점을 넘었은지 여부만 저장
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          fetchNextPage();
+        }
+      },
+      {
+        root: tableScrollRef.current, // 실제 스크롤 컨테이너
+        threshold: 0.1,
+      }
+    );
+
+    if (loadMoreRef.current) {
+      observer.observe(loadMoreRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  // 헤더 접힘 처리 (같은 스크롤 기준 사용)
+  const handleScroll = () => {
+    const scrollTop = tableScrollRef.current?.scrollTop ?? 0;
     setCollapsed(scrollTop > HEADER_COLLAPSE_POINT);
   };
 
-  // id 자체가 없으면 홈으로 이동
+  // 잘못된 접근 처리
   if (!id) return <Navigate to="/" />;
 
-  // 데이터가 준비되기 전까지 로딩 처리
+  // 초기 로딩 상태
   if (isLoading || !playlist) {
     return (
-      <Typography sx={{ p: 4 }}>
+      <Box sx={{ p: 4 }}>
         <LazyLoading />
-      </Typography>
+      </Box>
     );
   }
 
-  // 대표 이미지(없을 수도 있음)
   const imageUrl = playlist.images?.[0]?.url;
-
-  // 소유자 이름
   const ownerName = playlist.owner?.display_name ?? "알 수 없음";
-
-  // 팔로워 수(optional)
   const followerCount = playlist.followers.total ?? 0;
 
   return (
     <Box
-      ref={scrollRef}
-      onScroll={handleScroll}
       sx={{
-        height: "100%",
-        overflowY: "auto",
         px: 3,
         pt: 2,
         pb: 4,
         backgroundColor: "#121212",
       }}
     >
-      {/* 상단 배너 영역 */}
+      {/* 상단 플레이리스트 정보 영역 */}
       <Box
         sx={{
           display: "flex",
@@ -73,8 +109,6 @@ const PlaylistDetailPage = () => {
           height: collapsed ? 200 : 340,
           borderRadius: 3,
           transition: "all 0.3s ease",
-
-          // Spotify 느낌의 상단 그라데이션
           background: `
             linear-gradient(
               180deg,
@@ -84,7 +118,6 @@ const PlaylistDetailPage = () => {
           `,
         }}
       >
-        {/* 플레이리스트 대표 이미지 */}
         <Avatar
           variant="square"
           src={imageUrl}
@@ -93,11 +126,9 @@ const PlaylistDetailPage = () => {
             width: collapsed ? 160 : 232,
             height: collapsed ? 160 : 232,
             transition: "all 0.3s ease",
-            boxShadow: 3,
           }}
         />
 
-        {/* 플레이리스트 정보 영역 */}
         <Stack spacing={1}>
           <Typography variant="caption" fontWeight={700}>
             {playlist.public ? "공개 플레이리스트" : "비공개 플레이리스트"}
@@ -108,7 +139,6 @@ const PlaylistDetailPage = () => {
             sx={{
               fontSize: collapsed ? 32 : 48,
               lineHeight: 1.1,
-              transition: "font-size 0.3s ease",
             }}
           >
             {playlist.name}
@@ -126,8 +156,60 @@ const PlaylistDetailPage = () => {
         </Stack>
       </Box>
 
-      {/* 하단 영역 (추후 트랙 리스트가 들어갈 자리) */}
-      <Box sx={{ height: 1000 }} />
+      {/* 트랙 리스트 (유일한 스크롤 영역) */}
+      <Box
+        ref={tableScrollRef}
+        onScroll={handleScroll}
+        sx={{
+          height: "600px",
+          overflowY: "auto",
+          mt: 2,
+          "&::-webkit-scrollbar": { width: "8px" },
+          "&::-webkit-scrollbar-thumb": {
+            backgroundColor: "rgba(255,255,255,0.3)",
+            borderRadius: "3px",
+          },
+          "&::-webkit-scrollbar-track": {
+            background: "transparent",
+          },
+        }}
+      >
+        <Table
+          sx={{
+            "& .MuiTableCell-root": {
+              borderBottom: "none",
+            },
+          }}
+        >
+          <TableHead>
+            <TableRow>
+              <TableCell>#</TableCell>
+              <TableCell>Title</TableCell>
+              <TableCell>Album</TableCell>
+              <TableCell>Date added</TableCell>
+              <TableCell>Duration</TableCell>
+            </TableRow>
+          </TableHead>
+
+          <TableBody>
+            {playlistItems?.pages.map((page, pageIndex) => page.items.map((item, itemIndex) => <DesktopPlaylistItem key={pageIndex * PAGE_LIMIT + itemIndex} item={item} index={pageIndex * PAGE_LIMIT + itemIndex + 1} />))}
+
+            {/* 무한 스크롤 트리거용 요소 */}
+            <TableRow>
+              <TableCell colSpan={5}>
+                <div ref={loadMoreRef} style={{ height: 1 }} />
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+
+        {/* 다음 페이지 로딩 표시 */}
+        {isFetchingNextPage && (
+          <Box sx={{ textAlign: "center", py: 2 }}>
+            <LazyLoading />
+          </Box>
+        )}
+      </Box>
     </Box>
   );
 };
