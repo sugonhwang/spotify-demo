@@ -7,7 +7,7 @@ import { User } from "../models/user";
   - 유저가 로그인을 했을 때, 즉 access_token이 있을때만 프로파일을 보여줘야함 
  */
 
-const useGetCurrentProfile = (): UseQueryResult<User, Error> => {
+const useGetCurrentUserProfile = (): UseQueryResult<User, Error> => {
   // localStorage에서 access_token을 가져오기
   const accessToken = localStorage.getItem("access_token");
   return useQuery({
@@ -17,4 +17,4 @@ const useGetCurrentProfile = (): UseQueryResult<User, Error> => {
   });
 };
 
-export default useGetCurrentProfile;
+export default useGetCurrentUserProfile;
