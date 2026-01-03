@@ -32,3 +32,12 @@ export const getSpotifyAuthUrl = async () => {
   }
   // console.log("CLIENT_ID =", clientId);
 };
+
+// 로그아웃 함수
+export const logout = () => {
+  window.localStorage.removeItem("access_token");
+  window.localStorage.removeItem("code_verifier");
+  window.localStorage.removeItem("spotify_auth");
+
+  window.location.href = "/";
+};
