@@ -10,6 +10,7 @@ import { PAGE_LIMIT } from "../../configs/commonConfig";
 import { AxiosError } from "axios";
 import LoginButton from "../../common/components/LoginButton";
 import ErrorMessage from "../../common/components/ErrorMessage";
+import EmptyPlaylistWithSearch from "./components/EmptyPlaylistWithSearch";
 
 const HEADER_COLLAPSE_POINT = 120;
 
@@ -107,6 +108,7 @@ const PlaylistDetailPage = () => {
   const imageUrl = playlist.images?.[0]?.url;
   const ownerName = playlist.owner?.display_name ?? "알 수 없음";
   const followerCount = playlist.followers.total ?? 0;
+  const totalTracks = playlist.tracks.total ?? 0;
   return (
     <Box
       sx={{
@@ -175,61 +177,65 @@ const PlaylistDetailPage = () => {
         </Stack>
       </Box>
 
-      {/* 트랙 리스트 (유일한 스크롤 영역) */}
-      <Box
-        ref={tableScrollRef}
-        onScroll={handleScroll}
-        sx={{
-          height: "600px",
-          overflowY: "auto",
-          mt: 2,
-          "&::-webkit-scrollbar": { width: "8px" },
-          "&::-webkit-scrollbar-thumb": {
-            backgroundColor: "rgba(255,255,255,0.3)",
-            borderRadius: "3px",
-          },
-          "&::-webkit-scrollbar-track": {
-            background: "transparent",
-          },
-        }}
-      >
-        <Table
+      {totalTracks === 0 ? (
+        <Box sx={{ mt: 4, px: 4 }}>
+          <EmptyPlaylistWithSearch />
+        </Box>
+      ) : (
+        /* 트랙 리스트 */
+        <Box
+          ref={tableScrollRef}
+          onScroll={handleScroll}
           sx={{
-            "& .MuiTableCell-root": {
-              borderBottom: "none",
+            height: "600px",
+            overflowY: "auto",
+            mt: 2,
+            "&::-webkit-scrollbar": { width: "8px" },
+            "&::-webkit-scrollbar-thumb": {
+              backgroundColor: "rgba(255,255,255,0.3)",
+              borderRadius: "3px",
+            },
+            "&::-webkit-scrollbar-track": {
+              background: "transparent",
             },
           }}
-          stickyHeader
         >
-          <TableHead>
-            <TableRow>
-              <TableCell>#</TableCell>
-              <TableCell>Title</TableCell>
-              <TableCell>Album</TableCell>
-              <TableCell>Date added</TableCell>
-              <TableCell>Duration</TableCell>
-            </TableRow>
-          </TableHead>
+          <Table
+            sx={{
+              "& .MuiTableCell-root": {
+                borderBottom: "none",
+              },
+            }}
+            stickyHeader
+          >
+            <TableHead>
+              <TableRow>
+                <TableCell>#</TableCell>
+                <TableCell>Title</TableCell>
+                <TableCell>Album</TableCell>
+                <TableCell>Date added</TableCell>
+                <TableCell>Duration</TableCell>
+              </TableRow>
+            </TableHead>
 
-          <TableBody>
-            {playlistItems?.pages.map((page, pageIndex) => page.items.map((item, itemIndex) => <DesktopPlaylistItem key={pageIndex * PAGE_LIMIT + itemIndex} item={item} index={pageIndex * PAGE_LIMIT + itemIndex + 1} />))}
+            <TableBody>
+              {playlistItems?.pages.map((page, pageIndex) => page.items.map((item, itemIndex) => <DesktopPlaylistItem key={pageIndex * PAGE_LIMIT + itemIndex} item={item} index={pageIndex * PAGE_LIMIT + itemIndex + 1} />))}
 
-            {/* 무한 스크롤 트리거용 요소 */}
-            <TableRow>
-              <TableCell colSpan={5}>
-                <div ref={loadMoreRef} style={{ height: 50 }} />
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
+              <TableRow>
+                <TableCell colSpan={5}>
+                  <div ref={loadMoreRef} style={{ height: 50 }} />
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
 
-        {/* 다음 페이지 로딩 표시 */}
-        {isFetchingNextPage && (
-          <Box sx={{ textAlign: "center", py: 2 }}>
-            <LazyLoading />
-          </Box>
-        )}
-      </Box>
+          {isFetchingNextPage && (
+            <Box sx={{ textAlign: "center", py: 2 }}>
+              <LazyLoading />
+            </Box>
+          )}
+        </Box>
+      )}
     </Box>
   );
 };
