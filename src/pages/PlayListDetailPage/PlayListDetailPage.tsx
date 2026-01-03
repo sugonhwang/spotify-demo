@@ -165,9 +165,9 @@ const PlayListDetailPage = () => {
             {playlist.name}
           </Typography>
 
-          {playlist.description && (
+          {playlist.description && playlist.description !== "null" && (
             <Typography variant="body2" color="text.secondary">
-              {playlist.description}
+              {playlist.description || ""}
             </Typography>
           )}
 

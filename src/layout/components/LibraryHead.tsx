@@ -15,9 +15,12 @@ const LibraryHead = () => {
   const { mutate: createPlaylist } = useCreatePlaylist();
   const { data: userProfile } = useGetCurrentUserProfile();
 
+  // 플레이리스트 생성한 날짜 추가
+  const now = new Date();
+
   const handleCreatePlaylist = () => {
     if (userProfile) {
-      createPlaylist({ name: "My Playlist" });
+      createPlaylist({ name: ` ${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} My Playlist` });
     } else {
       getSpotifyAuthUrl();
     }

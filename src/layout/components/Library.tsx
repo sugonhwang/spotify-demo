@@ -26,6 +26,10 @@ const Library = () => {
   const { ref, inView } = useInView();
   const { data, isLoading, error, hasNextPage, isFetchingNextPage, fetchNextPage } = useGetCurrentUserPlaylists({ limit: 15, offset: 0 });
   const { data: user } = useGetCurrentProfile();
+
+  // 최신 플레이리스트 ID 추출
+  const latestId = data?.pages[0]?.items[0]?.id;
+
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
@@ -48,7 +52,7 @@ const Library = () => {
         <EmptyPlaylist />
       ) : (
         <PlaylistContainer>
-          {data?.pages.map((page, index) => <PlaylistUi playlists={page.items} key={index} />)}
+          {data?.pages.map((page, index) => <PlaylistUi playlists={page.items} key={index} latestId={index === 0 ? latestId : undefined} />)}
           <div ref={ref}>{isFetchingNextPage && <LazyLoading />}</div>
         </PlaylistContainer>
       )}
