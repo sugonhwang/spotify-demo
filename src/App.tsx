@@ -6,7 +6,7 @@ import SearchWithKeywordPage from "./pages/SearchKeywordPage/SearchWithKeywordPa
 import PlaylistPage from "./pages/PlaylistPage/PlaylistPage";
 import LazyLoading from "./common/components/LazyLoading";
 import useExchangeToken from "./hooks/useExchangeToken";
-import PlaylistDetailPage from "./pages/PlayListDetailPage/PlaylistDetailPage";
+import PlayListDetailPage from "./pages/PlayListDetailPage/PlayListDetailPage";
 
 const AppLayout = React.lazy(() => import("./layout/AppLayout"));
 const HomePage = React.lazy(() => import("./pages/HomePage/HomePage"));
@@ -48,7 +48,7 @@ function App() {
             <Route index element={<HomePage />} />
             <Route path="search" element={<SearchPage />} />
             <Route path="search/:keyword" element={<SearchWithKeywordPage />} />
-            <Route path="playlist/:id" element={<PlaylistDetailPage />} />
+            <Route path="playlist/:id" element={<PlayListDetailPage />} />
             <Route path="playlist" element={<PlaylistPage />} />
             <Route path="callback" element={<HomePage />} />
           </Route>

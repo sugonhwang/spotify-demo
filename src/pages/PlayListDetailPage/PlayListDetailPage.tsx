@@ -14,7 +14,7 @@ import EmptyPlaylistWithSearch from "./components/EmptyPlaylistWithSearch";
 
 const HEADER_COLLAPSE_POINT = 120;
 
-const PlaylistDetailPage = () => {
+const PlayListDetailPage = () => {
   // URL 파라미터
   const { id } = useParams<{ id: string }>();
 
@@ -240,4 +240,4 @@ const PlaylistDetailPage = () => {
   );
 };
 
-export default PlaylistDetailPage;
+export default PlayListDetailPage;
