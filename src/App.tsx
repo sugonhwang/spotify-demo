@@ -6,7 +6,8 @@ import SearchWithKeywordPage from "./pages/SearchKeywordPage/SearchWithKeywordPa
 import PlaylistPage from "./pages/PlaylistPage/PlaylistPage";
 import LazyLoading from "./common/components/LazyLoading";
 import useExchangeToken from "./hooks/useExchangeToken";
-import PlaylistDetailPage from "./pages/PlayListDetailPage/PlayListDetailPage";
+import PlaylistDetailPage from "./pages/PlayListDetailPage/PlaylistDetailPage";
+
 const AppLayout = React.lazy(() => import("./layout/AppLayout"));
 const HomePage = React.lazy(() => import("./pages/HomePage/HomePage"));
 const SearchPage = React.lazy(() => import("./pages/SearchPage/SearchPage"));
