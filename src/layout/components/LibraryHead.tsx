@@ -1,6 +1,9 @@
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import AddIcon from "@mui/icons-material/Add";
 import { Box, Button, styled, Typography } from "@mui/material";
+import useCreatePlaylist from "../../hooks/useCreatePlaylist";
+import useGetCurrentUserProfile from "../../hooks/useGetCurrentUserProfile";
+import { getSpotifyAuthUrl } from "../../utils/auth";
 
 const Head = styled("div")({
   display: "flex",
@@ -9,7 +12,17 @@ const Head = styled("div")({
 });
 
 const LibraryHead = () => {
-  const handleAddLibrary = () => {};
+  const { mutate: createPlaylist } = useCreatePlaylist();
+  const { data: userProfile } = useGetCurrentUserProfile();
+
+  const handleCreatePlaylist = () => {
+    if (userProfile) {
+      createPlaylist({ name: "My Playlist" });
+    } else {
+      getSpotifyAuthUrl();
+    }
+  };
+
   return (
     <div>
       <Head>
@@ -20,7 +33,7 @@ const LibraryHead = () => {
           </Typography>
         </Box>
         <div>
-          <Button onClick={handleAddLibrary}>
+          <Button onClick={handleCreatePlaylist}>
             <AddIcon color="success" />
           </Button>
         </div>

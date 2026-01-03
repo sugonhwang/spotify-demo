@@ -7,6 +7,9 @@ import useGetPlaylistItems from "../../hooks/useGetPlaylistItems";
 import DesktopPlaylistItem from "./components/DesktopPlaylistItem";
 import LazyLoading from "../../common/components/LazyLoading";
 import { PAGE_LIMIT } from "../../configs/commonConfig";
+import { AxiosError } from "axios";
+import LoginButton from "../../common/components/LoginButton";
+import ErrorMessage from "../../common/components/ErrorMessage";
 
 const HEADER_COLLAPSE_POINT = 120;
 
@@ -15,7 +18,11 @@ const PlaylistDetailPage = () => {
   const { id } = useParams<{ id: string }>();
 
   // 플레이리스트 기본 정보
-  const { data: playlist, isLoading } = useGetPlaylist({
+  const {
+    data: playlist,
+    isLoading,
+    error: playlistError,
+  } = useGetPlaylist({
     playlist_id: id as string,
   });
 
@@ -25,6 +32,7 @@ const PlaylistDetailPage = () => {
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
+    error: playlistItemsError,
   } = useGetPlaylistItems({
     playlist_id: id as string,
     limit: PAGE_LIMIT,
@@ -69,6 +77,24 @@ const PlaylistDetailPage = () => {
   // 잘못된 접근 처리
   if (!id) return <Navigate to="/" />;
 
+  // 에러 처리
+  if (playlistError || playlistItemsError) {
+    const error = playlistError || playlistItemsError;
+
+    // axios 에러인지 타입 가드로 확인
+    if (error instanceof AxiosError && error.response?.status === 401) {
+      return (
+        <Box display="flex" alignItems="center" justifyContent="center" height="100%" flexDirection="column">
+          <Typography variant="h2" fontWeight={700} mb="20px">
+            다시 로그인 하세요
+          </Typography>
+          <LoginButton />
+        </Box>
+      );
+    }
+    return <ErrorMessage errorMessage="Failed to load" />;
+  }
+
   // 초기 로딩 상태
   if (isLoading || !playlist) {
     return (
@@ -81,7 +107,6 @@ const PlaylistDetailPage = () => {
   const imageUrl = playlist.images?.[0]?.url;
   const ownerName = playlist.owner?.display_name ?? "알 수 없음";
   const followerCount = playlist.followers.total ?? 0;
-
   return (
     <Box
       sx={{
