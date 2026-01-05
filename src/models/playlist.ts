@@ -174,3 +174,28 @@ export interface CreatePlaylistRequest {
   collaborative?: boolean;
   description?: string;
 }
+
+export type SimplifiedEpisode = Omit<EpisodeObject, "show">;
+
+export interface SimplifiedAudioBook {
+  author: { name: string }[];
+  available_markets: string[];
+  copyrights: Copyright;
+  description: string;
+  html_description: string;
+  edition?: string;
+  explicit: boolean;
+  external_urls: ExternalUrls;
+  href: string;
+  id: string;
+  images: Image[];
+  languages: string[];
+  media_type: string[];
+  name: string;
+  narrators: {
+    name: string;
+  }[];
+  publisher: string;
+  uri: string;
+  total_chapters: number;
+}
