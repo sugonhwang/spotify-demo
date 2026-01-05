@@ -179,7 +179,7 @@ const PlayListDetailPage = () => {
 
       {totalTracks === 0 ? (
         <Box sx={{ mt: 4, px: 4 }}>
-          <EmptyPlaylistWithSearch />
+          <EmptyPlaylistWithSearch playlistId={id} />
         </Box>
       ) : (
         /* 트랙 리스트 */

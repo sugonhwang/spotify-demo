@@ -1,4 +1,4 @@
-import { CreatePlaylistRequest, GetCurrentUserPlaylistRequest, GetCurrentUserPlaylistResponse, GetPlaylistItemsRequest, GetPlaylistItemsResponse, GetPlaylistRequest, Playlist } from "../models/playlist";
+import { AddTracksToPlaylistRequest, AddTracksToPlaylistResponse, CreatePlaylistRequest, GetCurrentUserPlaylistRequest, GetCurrentUserPlaylistResponse, GetPlaylistItemsRequest, GetPlaylistItemsResponse, GetPlaylistRequest, Playlist } from "../models/playlist";
 import api from "../utils/api";
 
 export const getCurrentUserPlaylists = async ({ limit, offset }: GetCurrentUserPlaylistRequest): Promise<GetCurrentUserPlaylistResponse> => {
@@ -47,5 +47,18 @@ export const createPlayList = async (user_id: string, params: CreatePlaylistRequ
     return response.data;
   } catch {
     throw new Error("fail to create playlist");
+  }
+};
+
+export const addTracksToPlaylist = async (playlist_id: string, uris: string[], position?: number): Promise<AddTracksToPlaylistResponse> => {
+  try {
+    // 요청 타입 명시
+    const body: AddTracksToPlaylistRequest = position !== undefined ? { uris, position } : { uris };
+    // axios 제네릭에 응답 타입을 넣어 response.data의 타입을 보장
+    const response = await api.post<AddTracksToPlaylistResponse>(`/playlists/${playlist_id}/tracks`, body);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to add tracks to playlist", error);
+    throw error;
   }
 };

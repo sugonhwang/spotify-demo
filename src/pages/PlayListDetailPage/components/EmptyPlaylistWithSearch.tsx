@@ -7,6 +7,10 @@ import LazyLoading from "../../../common/components/LazyLoading";
 import { TrackObject } from "../../../models/playlist";
 import SearchIcon from "@mui/icons-material/Search";
 
+interface EmptyPlaylistWithSearchProps {
+  playlistId?: string;
+}
+
 const SearchContainer = styled(Box)({
   padding: "16px",
   width: "100%",
@@ -40,7 +44,7 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
   },
 }));
 
-const EmptyPlaylistWithSearch = () => {
+const EmptyPlaylistWithSearch = ({ playlistId }: EmptyPlaylistWithSearchProps) => {
   const [keyword, setKeyword] = useState<string>(""); // useState를 쓸때 keyword가 무슨 타입인지 정의해줘야함
   const { data, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage } = useSearchItemsByKeyword({
     q: keyword,
@@ -83,7 +87,7 @@ const EmptyPlaylistWithSearch = () => {
         {isLoading ? (
           <LazyLoading /> // 로딩 중일 때 스피너 표시
         ) : hasResults ? (
-          <SearchResultList list={tracks} hasNextPage={hasNextPage} isFetchingNextPage={isFetchingNextPage} fetchNextPage={fetchNextPage} />
+          <SearchResultList playlistId={playlistId} list={tracks} hasNextPage={hasNextPage} isFetchingNextPage={isFetchingNextPage} fetchNextPage={fetchNextPage} />
         ) : keyword === "" ? null : (
           <div>
             <Typography color="primary" fontWeight={600}>{`No Result for "${keyword}"`}</Typography>

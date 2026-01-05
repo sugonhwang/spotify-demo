@@ -199,3 +199,14 @@ export interface SimplifiedAudioBook {
   uri: string;
   total_chapters: number;
 }
+
+// AddTracks 요청 : 추가할 트랙 URI 목록과 선택적 위치(position)
+export interface AddTracksToPlaylistRequest {
+  uris: string[];
+  position?: number;
+}
+
+// AddTracks 응답
+export interface AddTracksToPlaylistResponse {
+  snapshot_id: string;
+}
