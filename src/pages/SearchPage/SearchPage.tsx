@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { useNavigate } from "react-router";
 import useGetCategories from "../../hooks/useGetCategories";
 import { Box, Container, Grid, InputAdornment, TextField, Typography } from "@mui/material";
