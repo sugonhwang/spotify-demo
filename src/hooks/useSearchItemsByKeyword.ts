@@ -14,7 +14,7 @@ const useSearchItemsByKeyword = (params: SearchRequestParams) => {
     },
     initialPageParam: 0,
     getNextPageParam: (LastPage) => {
-      const nextPageUrl = LastPage.tracks?.next || LastPage.artist?.next || LastPage.album?.next || LastPage.playlist?.next || LastPage.show?.next || LastPage.episode?.next || LastPage.audiobook?.next;
+      const nextPageUrl = LastPage.tracks?.next || LastPage.artists?.next || LastPage.albums?.next || LastPage.playlists?.next || LastPage.shows?.next || LastPage.episodes?.next || LastPage.audiobooks?.next;
 
       if (nextPageUrl) {
         const nextOffset = new URL(nextPageUrl).searchParams.get("offset");

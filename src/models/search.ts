@@ -23,11 +23,12 @@ export interface SearchRequestParams {
 }
 
 export interface SearchResponse {
-  artist?: ApiResponse<Artist>;
-  album?: ApiResponse<SimplifiedAlbum>;
+  // Spotify API returns plural keys (albums, artists, playlists...)
+  artists?: ApiResponse<Artist>;
+  albums?: ApiResponse<SimplifiedAlbum>;
   tracks?: ApiResponse<TrackObject>;
-  playlist?: ApiResponse<SimplifiedPlaylist>;
-  show?: ApiResponse<SimplifiedShowObject>;
-  episode?: ApiResponse<SimplifiedEpisode>;
-  audiobook?: ApiResponse<SimplifiedAudioBook>;
+  playlists?: ApiResponse<SimplifiedPlaylist>;
+  shows?: ApiResponse<SimplifiedShowObject>;
+  episodes?: ApiResponse<SimplifiedEpisode>;
+  audiobooks?: ApiResponse<SimplifiedAudioBook>;
 }
