@@ -107,7 +107,7 @@ const SearchWithKeywordPage = () => {
             {/* 왼쪽: Top result & Artists */}
             <Grid item xs={12} md={4}>
               {/* Top result */}
-              <Typography variant="h5" sx={{ mb: 2 }}>
+              <Typography variant="h5" sx={{ mb: 2 }} fontWeight={700}>
                 Top result
               </Typography>
               {topTrack ? (
@@ -136,7 +136,7 @@ const SearchWithKeywordPage = () => {
 
               {/* Artists */}
               <Box sx={{ mt: 4 }}>
-                <Typography variant="h5" sx={{ mb: 2 }}>
+                <Typography variant="h5" sx={{ mb: 2 }} fontWeight={700}>
                   Artists
                 </Typography>
                 <Box sx={{ display: "flex", gap: 2, overflowX: "auto", pb: 1 }}>{artists.length > 0 ? artists.slice(0, 12).map((artist) => <ArtistCard key={artist.id} image={artist.images?.[0]?.url ?? ""} name={artist.name ?? "Unknown Artist"} />) : <Typography color="text.secondary">아티스트가 없습니다.</Typography>}</Box>
@@ -146,7 +146,7 @@ const SearchWithKeywordPage = () => {
             {/* 오른쪽: Songs & Albums */}
             <Grid item xs={12} md={8}>
               {/* Songs */}
-              <Typography variant="h5" sx={{ mb: 2 }}>
+              <Typography variant="h5" sx={{ mb: 2 }} fontWeight={700}>
                 Songs
               </Typography>
               <SearchResultList list={tracks} hasNextPage={hasNextPage ?? false} isFetchingNextPage={isFetchingNextPage ?? false} fetchNextPage={fetchNextPage} />
