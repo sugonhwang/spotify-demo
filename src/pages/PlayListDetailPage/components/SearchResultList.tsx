@@ -47,7 +47,7 @@ const SearchResultList = ({ playlistId, list, hasNextPage, isFetchingNextPage, f
     if (inView && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
-  }, [inView, hasNextPage, isFetchingNextPage]);
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const handleAdd = (track: TrackObject) => {
     if (!track.uri) return;
